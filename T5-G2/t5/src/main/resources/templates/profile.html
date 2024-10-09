@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <link href="./t5/css/profile.css" rel="stylesheet" />
+    
+
+    
+    <!-- FontAwesome icons -->
+    <script src="https://kit.fontawesome.com/d963f915e6.js" crossorigin="anonymous"></script>
+    <!-- Sweet Alert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <title>Pagina Profilo</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <span class="title">PROFILO UTENTE 🦳</span>
+        <!-- Qui verranno mostrati nome, cognome e username in formato compatto -->
+        <div class="user-info">
+            <p><span class="bold">Nome:</span> <span id="nome"></span></p>
+            <p><span class="bold">Cognome:</span> <span id="cognome"></span></p>
+            <p><span class="bold">Email:</span> <span id="email"></span></p> <!-- Email aggiunta qui -->
+        </div>
+
+        <table id="userDetailsTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Punti</th>
+                    <th>Partite Giocate</th>
+                    <th>Tempo Totale (min)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- I dati saranno inseriti qui dinamicamente -->
+            </tbody>
+        </table>
+
+        <!-- Aggiunta per il messaggio nessuna partita -->
+        <p id="noGamesMessage" style="display:none;">Nessuna partita giocata.</p>
+    </div>
+    
+
+
+    <button type="button" class="go-back-button" onclick="redirectToPagemain(); saveLoginData()">Go Back</button>
+
+</body>
+<script src="./t5/js/profile.js"></script>
+
+</html>

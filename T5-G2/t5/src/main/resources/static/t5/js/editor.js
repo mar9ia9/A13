@@ -5,20 +5,22 @@ var total_rounds_scalata = 0;   // numero totale di rounds
 var selectedScalata = "";
 
 var isWin = false;              // flag per indicare se il giocatore ha vinto o perso
-var orderTurno = 0;
 var perc_robot = '0';           // percentuale di copertura del robot scelto
 var gameScore = 0;
 var locGiocatore = 0;
-
+var orderturno;
 // (MODIFICA 23/04/2024) Get actual date
 var currentDate = new Date();
 
 //Riceeiving the game info from the server
 $(document).ready(function () {
+
+
   
   current_round_scalata = localStorage.getItem("current_round_scalata");
   total_rounds_scalata = localStorage.getItem("total_rounds_of_scalata");
   selectedScalata = localStorage.getItem("scalata_name");
+  orderTurno = localStorage.getItem("orderTurno");
 
   var idUtente = parseJwt(getCookie("jwt")).userId;
   var idPartita = localStorage.getItem("gameId");       // set by <task x> at the start of the game
@@ -59,47 +61,50 @@ $(document).ready(function () {
     },
     dataType: "text",
     success: function (response) {
+        // INIZIA la parte modificata
+        // Ricezione avvenuta con successo
+        console.log(nameCUT+"SourceCode \n\n\n"+JSON.parse(response).class);
 
-      // Ricezione avvenuta con successo
-      // console.log(response);
-      console.log(nameCUT+"SourceCode \n\n\n"+JSON.parse(response).class);
-      sidebarEditor.setValue(JSON.parse(response).class);
+        // Mantieni il contenuto dell'editor prima di sovrascriverlo
+        var currentEditorContent = editor.getValue();
 
-      //MODIFICA (23/04/2024)  
-      //Format date to dd/mm/yyyy
-      var formattedDate = currentDate.getDate() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear();
-      console.log("formattedDate: "+formattedDate);
+        // Imposta il contenuto della classe sotto test solo nel sidebarEditor
+        sidebarEditor.setValue(JSON.parse(response).class);
 
-      //Obtain the content of the textarea
-      var textareaContent = document.getElementById("editor").value;
-      
-      //Substitute "TestClasse" with the name of the CUT already received
-      var newContent = textareaContent.replace("TestClasse", testClassName);
+        // MODIFICA (23/04/2024)  
+        // Format date to dd/mm/yyyy
+        var formattedDate = currentDate.getDate() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear();
+        console.log("formattedDate: " + formattedDate);
 
-      //Substitute "username" with the username of the player
-      newContent = newContent.replace("username", parseJwt(getCookie("jwt")).sub);
+        // Ottieni il contenuto dell'editor principale (dove si trova TestClasse)
+        var textareaContent = currentEditorContent;
 
-      //Substitute "userID" with the ID of the player
-      newContent = newContent.replace("userID", parseJwt(getCookie("jwt")).userId);
+        // Sostituisci "TestClasse" con il nome della classe sotto test
+        var newContent = textareaContent.replace("TestClasse", testClassName);
 
-      //Substitute "date" with the current date
-      newContent = newContent.replace("date", formattedDate);
+        // Sostituisci "username" con il nome utente del giocatore
+        newContent = newContent.replace("username", parseJwt(getCookie("jwt")).sub);
 
-      console.log("newContent \n\n"+newContent);
+        // Sostituisci "userID" con l'ID del giocatore
+        newContent = newContent.replace("userID", parseJwt(getCookie("jwt")).userId);
 
-      //Set the new content to the textarea
-      document.getElementById("editor").value = newContent;
-      editor.setValue(newContent);
-      //FINE MODIFICA (23/04/2024)
+        // Sostituisci "date" con la data corrente
+        newContent = newContent.replace("date", formattedDate);
 
-      alert("Classe: "+nameCUT+".java ricevuta con successo");
+        console.log("newContent \n\n" + newContent);
+
+        // Mantieni le modifiche esistenti e imposta il nuovo contenuto solo con i cambiamenti necessari
+        editor.setValue(newContent);
+
+        // FINE MODIFICA (23/04/2024)
+
+        alert("Classe: " + nameCUT + ".java ricevuta con successo");
+        // FINE della parte modificata
     },
     error: function () {
-
-      // Gestione dell'errore
-      console.log("Errore durante la ricezione del file "+ nameCUT+".java");
+        console.log("Errore durante la ricezione del file "+ nameCUT+".java");
     }
-  });
+});
 });
 
 //TASTO STORICO
@@ -197,7 +202,6 @@ var runButton = document.getElementById("runButton");
 runButton.addEventListener("click", function () {
 
   document.getElementById('loading-editor').style.display = 'block';
-  $(document).ready(function () {
 
     //Check if the game is over
     if (localStorage.getItem("gameId") == "null") {                     
@@ -258,7 +262,10 @@ runButton.addEventListener("click", function () {
             swal("Peccato!", "Hai perso! Ecco il tuo punteggio: " + gameScore, "error");
             turno++;
           }
-          orderTurno++;
+	        orderTurno++;
+          localStorage.setItem("orderTurno", orderTurno);
+          
+
 
           // e.g VolumeT8/FolderTreeEvo/Calcolatrice/CalcolatriceSourceCode/Calcolatrice.java
           var classe = 'VolumeT8/FolderTreeEvo/' + localStorage.getItem("classe") + 
@@ -291,6 +298,7 @@ runButton.addEventListener("click", function () {
             console.log("Error: mode not found");
             window.location.href = "/main";
           }
+	  
           // added to window.onbeforeunload to remove it only when the window is closed
           // localStorage.setItem("gameId", null); 
 
@@ -377,8 +385,8 @@ runButton.addEventListener("click", function () {
                             calculateFinalScore(localStorage.getItem("scalataId")).then((data) => { 
                               console.log("calculateFinalScore response: ", data.finalScore);
                               closeScalata(localStorage.getItem("scalataId"), true, data.finalScore, current_round_scalata).then((data) => {
-                                swal("Complimenti!", `Hai completato la scalata!\n${displayRobotPoints}\n A breve verrai reindirizzato alla classifica.`, "success").then((value) => {
-                                  window.location.href = "/leaderboardScalata";
+                                swal("Complimenti!", `Hai completato la scalata!\n${displayRobotPoints}\n A breve verrai reindirizzato alla schermata di selezione della modalità di gioco.`, "success").then((value) => {
+                                  window.location.href = "/main";
                                 });
                               });
                             }).catch((error) => {
@@ -455,7 +463,6 @@ runButton.addEventListener("click", function () {
       });
     }
   });
-});
 
 // TASTO RUN (COVERAGE)
 var coverageButton = document.getElementById("coverageButton");
@@ -501,11 +508,14 @@ function processJaCoCoReport() {
     }
   });
   orderTurno++;
+  localStorage.setItem("orderTurno", orderTurno);
+
 
   // e.g VolumeT8/FolderTreeEvo/Calcolatrice/CalcolatriceSourceCode/Calcolatrice.java
   var classe = 'VolumeT8/FolderTreeEvo/' + formData.get("className") + 
                 '/' + formData.get("className") + 'SourceCode' +
                 '/' + formData.get("underTestClassName");
+
   
   // TODO: This path is used also from task t8, so if change, check also t8
   // e.g. /VolumeT8/FolderTreeEvo/Calcolatrice/StudentLogin/Player1/Game1/Round1/Turn1/TestReport
@@ -533,6 +543,7 @@ function processJaCoCoReport() {
     console.log("Error: mode not found");
     window.location.href = "/main";
   }
+  
 
   // Definisci il percorso dell'API
   var apiBaseUrl = '/api/';
@@ -750,18 +761,13 @@ function closeInfoModal() {
   infoModal.style.display = "none";
 }
 
-window.onbeforeunload = function() {
-  if (localStorage.getItem("modalita") !== "Scalata") {
-    localStorage.setItem("gameId", null);
-    localStorage.setItem("turnId", null);
-    localStorage.setItem("classe", null);
-    localStorage.setItem("robot", null);
-    localStorage.setItem("difficulty", null);
-  }
-}
+
+// Al caricamento della pagina, incrementa il valore di orderTurno
 
 //codice custom per l'integrabilità con thymeleaf
 var robot = "[[${robot}]]";
 var username = "[[${username}]]";
 var gameIDJ = "[[${gameIDj}]]";
+
+
 

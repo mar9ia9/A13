@@ -294,7 +294,7 @@ body {
   background-color: #c8e6c9; /* Colore di sfondo per le righe coperte */
 }
 .uncovered-line {
-  background-color: #ffcdd2; /* Colore di sfondo per le righe non coperte */
+  background-color: #564956; /* Colore di sfondo per le righe non coperte */ 
 }
 .partially-covered-line {
   background-color: #ffecb3; /* Colore di sfondo per le righe parzialmente coperte */
