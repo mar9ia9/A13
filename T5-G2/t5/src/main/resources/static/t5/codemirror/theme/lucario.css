@@ -6,7 +6,7 @@
 */
 
 .cm-s-lucario.CodeMirror, .cm-s-lucario .CodeMirror-gutters {
-  background-color: rgb(46, 46, 72) !important;
+  background-color: #141429 !important; /*colore base 2e2e48*/
   color: #f8f8f2 !important;
   border: none;
 }
@@ -17,13 +17,13 @@
 .cm-s-lucario .CodeMirror-line::selection, .cm-s-lucario .CodeMirror-line > span::selection, .cm-s-lucario .CodeMirror-line > span > span::selection { background: #243443; }
 .cm-s-lucario .CodeMirror-line::-moz-selection, .cm-s-lucario .CodeMirror-line > span::-moz-selection, .cm-s-lucario .CodeMirror-line > span > span::-moz-selection { background: #243443; }
 .cm-s-lucario span.cm-comment { color: #5c98cd; }
-.cm-s-lucario span.cm-string, .cm-s-lucario span.cm-string-2 { color: #E6DB74; }
-.cm-s-lucario span.cm-number { color: #ca94ff; }
-.cm-s-lucario span.cm-variable { color: #f8f8f2; }
-.cm-s-lucario span.cm-variable-2 { color: #f8f8f2; }
-.cm-s-lucario span.cm-def { color: #72C05D; }
+.cm-s-lucario span.cm-string, .cm-s-lucario span.cm-string-2 { color: #ffe600; } /*colore base #E6DB74*/
+.cm-s-lucario span.cm-number { color: #00d5ff; } /*colore base ca94ff*/
+.cm-s-lucario span.cm-variable { color: #00d5ff; } /*colore base #f8f8f2*/
+.cm-s-lucario span.cm-variable-2 { color: #00d5ff; }
+.cm-s-lucario span.cm-def { color: #37ff00; } /*colore base 72C05D*/
 .cm-s-lucario span.cm-operator { color: #66D9EF; }
-.cm-s-lucario span.cm-keyword { color: #ff6541; }
+.cm-s-lucario span.cm-keyword { color: #b80000; } /*colore base #ff6541*/
 .cm-s-lucario span.cm-atom { color: #bd93f9; }
 .cm-s-lucario span.cm-meta { color: #f8f8f2; }
 .cm-s-lucario span.cm-tag { color: #ff6541; }

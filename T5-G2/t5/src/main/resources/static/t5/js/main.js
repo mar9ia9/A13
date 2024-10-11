@@ -243,7 +243,7 @@ function redirectToPageGamemode() {
 // }
 function redirectToPageeditor() {
 
-  console.log("reidrectToPageeditor() called.");
+  console.log("redirectToPageeditor() called.");
   let gamemode = localStorage.getItem("modalita");
 
   switch (gamemode) {
@@ -273,14 +273,16 @@ function redirectToPageeditor() {
           localStorage.setItem("gameId", response.game_id);
           localStorage.setItem("turnId", response.turn_id);
           localStorage.setItem("roundId", response.round_id);
-          localStorage.setItem("orderTurno", "1");
+          localStorage.removeItem("editorContent"); 
+          localStorage.removeItem("underTestContent"); 
+          localStorage.setItem("orderTurno", "0");
           window.location.href = "/editor";
         },
         dataType: "json",
         error: function (error) {
           console.log("Error details:", error);
           console.log("USERNAME : ", localStorage.getItem("username"));
-          console.error('Errore nell\' invio dei dati');
+          console.error('Errore nell invio dei dati');
           // swal("Errore", "Dati non inviati con successo. Riprovare.", "error");
           alert("Dati non inviati con successo. Riprovare.");
         }
@@ -356,4 +358,7 @@ function saveLoginData() {
   username = username.toString();
   localStorage.setItem("username", username);
   console.log("username :", username);
+}
+function redirectToProfile() {
+  window.location.href = "/profile";
 }

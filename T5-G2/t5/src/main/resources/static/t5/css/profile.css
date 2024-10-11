@@ -1,0 +1,80 @@
+/* Sfondo scuro personalizzato */
+body {
+    background-color: #1c1c28;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    text-align: center; /* Testo centrato per tutti gli elementi */
+    padding: 20px; /* Aggiunto padding intorno al contenuto */
+}
+
+/* Stile del titolo utente */
+.title {
+    font-size: 48px; /* Titolo più grande */
+    font-weight: bold;
+    color: #ff4c4c; /* Rosso chiaro */
+    margin-top: 40px;
+    font-family: 'Trebuchet MS', sans-serif; /* Font specifico */
+}
+
+
+/* Centratura del nome, cognome, e username */
+.user-info {
+    background-color: #2b2b3a; /* Colore più chiaro rispetto allo sfondo del body */
+    padding: 20px; /* Spazio interno */
+    border-radius: 10px; /* Angoli arrotondati per il box */
+    width: 50%; /* Larghezza del box */
+    margin: 20px auto; /* Centra il box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Ombra per effetto di profondità */
+    font-size: 24px;
+}
+
+/* Stile per rendere il testo in grassetto */
+.bold {
+    font-weight: bold;
+    color: #ffeda5; /* Colore giallo chiaro */
+    font-family: 'Georgia', serif; /* Font diverso */
+}
+
+/* Tabella centrata con statistiche */
+table {
+    margin: 40px auto; /* Più spazio per centrare la tabella */
+    border-collapse: collapse;
+    width: 60%; /* Tabella più stretta */
+}
+
+table th, table td {
+    border: 1px solid #ffffff;
+    padding: 15px; /* Aumentata la spaziatura per una lettura migliore */
+    font-size: 18px;
+    text-align: center; /* Testo centrato nella tabella */
+}
+
+/* Colore sfondo delle intestazioni della tabella */
+table th {
+    background-color: #333333;
+}
+
+/* Stile personalizzato per ridurre le dimensioni del testo */
+.compact-info p {
+    font-size: 16px; /* Dimensione testo un po' più grande */
+    line-height: 1.6;
+    margin: 10px 0;
+}
+
+.compact-info span {
+    font-weight: bold;
+}
+
+.go-back-button {
+    background-color: rgba(57,57,83,1);
+    color: #fff;
+    border: rgba(57,57,83,1);
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    position: relative;
+    top: 10px;
+    right: 60px;
+  }

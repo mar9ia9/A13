@@ -59,6 +59,9 @@ var editor = CodeMirror.fromTextArea(document.getElementById("editor"), {
     gutters: ['CodeMirror-foldgutter']
 });
 
+
+
+// Gestione del clic sul gutter per il folding
 editor.on('click', function (cm, event) {
     var gutterWidth = cm.getGutterElement().offsetWidth;
     var gutterClick = event.clientX - gutterWidth;
@@ -74,6 +77,7 @@ editor.on('click', function (cm, event) {
         }
     }
 });
+
 
 var startReplaceButtons = document.getElementsByClassName("startReplace");
 for (var i = 0; i < startReplaceButtons.length; i++) {
@@ -115,10 +119,12 @@ logout.addEventListener("click", function () {
             url: '/logout',
             method: 'GET',
             success: function (data, textStatus, xhr) {
-                window.location.href = "/login";
+                window.location.replace = "/login";
+                window.location.reload(); // Aggiungi questa riga per ricaricare la pagina
             },
             error: function (xhr, textStatus, error) {
                 console.error('Error:', textStatus, error);
+                window.location.reload(); // Aggiungi questa riga per ricaricare la pagina
             }
         });
 
@@ -323,36 +329,38 @@ function cercaParola() {
     });
     closeSearchModal(); // Chiudi la finestra modale dopo la ricerca
 }
-function saveCode() {
-    var code = document.getElementById("editor").value;
-    var fileName = prompt("Inserisci il nome del file:", "MyFile.java");
-    if (fileName != null && fileName != "") {
-        var blob = new Blob([code], { type: "text/plain;charset=utf-8" });
-        saveAs(blob, fileName);
+
+function saveCodeLocally() {
+    // Ottieni il contenuto del codice dall'editor
+    var codeContent = editor.getValue();
+
+    // Nome di base del file
+    var defaultFileName = "myFile.java";
+
+    // Chiedi all'utente il nome del file, con un valore predefinito
+    var fileName = prompt("Inserisci il nome del file (con estensione):", defaultFileName);
+
+    // Se l'utente non ha fornito un nome, esci dalla funzione
+    if (!fileName) {
+        alert("Nome del file non valido!");
+        return;
     }
-}
-function saveAs(blob, fileName) {
-    var link = document.createElement("a");
-    link.download = fileName;
-    link.href = URL.createObjectURL(blob);
-    document.body.appendChild(link);
+
+    // Crea un blob di testo con il contenuto del codice
+    var blob = new Blob([codeContent], { type: 'text/plain' });
+
+    // Crea un link temporaneo per scaricare il file
+    var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName;  // Usa il nome fornito dall'utente o quello di default
     link.click();
-    document.body.removeChild(link);
+
+    // Opzionale: cancella l'oggetto dopo il download
+    window.URL.revokeObjectURL(link.href);
 }
-function sostituisciTesto(editor) {
-    var testoSelezionato = editor.getSelection();
-    if (testoSelezionato) {
-        var replaceTermInput = document.getElementById("replaceTerm");
-        var nuovoTesto = replaceTermInput.value;
-        if (nuovoTesto) {
-            var cursor = editor.getCursor();
-            var codice = editor.getValue();
-            var nuovoCodice = codice.replaceAll(testoSelezionato, nuovoTesto);
-            editor.setValue(nuovoCodice);
-            editor.setCursor(cursor);
-        }
-    }
-}
+
+
+
 function autocomplete(cm, options) {
     var startTag = options.startTag || ".";
     var suggestionList = options.suggestionList || [];
@@ -425,3 +433,43 @@ function autocomplete(cm, options) {
 
 var suggestionList = ["ArrayList", "LinkedList", "HashMap", "HashSet", "String", "Integer", "Boolean", "Double", "Float", "Character", "Byte", "Short", "Long", "Array", "List", "Set", "Map", "Queue", "Stack", "TreeSet", "TreeMap", "PriorityQueue", "Comparator", "Comparable", "Iterator", "Enumeration", "AbstractList", "AbstractSet", "AbstractMap", "AbstractQueue", "AbstractSequentialList", "LinkedListNode", "LinkedListIterator", "LinkedListSpliterator", "LinkedListDescendingIterator", "LinkedListDescendingSpliterator", "ArrayListNode", "ArrayListIterator", "ArrayListSpliterator", "ArrayListReverseIterator", "ArrayListReverseSpliterator", "HashSetNode", "HashSetIterator", "HashSetSpliterator", "HashMapEntry", "HashMapNode", "HashMapIterator", "HashMapSpliterator", "HashMapKeyIterator", "HashMapKeySpliterator", "HashMapValueIterator", "HashMapValueSpliterator", "HashMapEntryIterator", "HashMapEntrySpliterator", "HashSetDescendingIterator", "HashSetDescendingSpliterator", "TreeSetNode", "TreeSetIterator", "TreeSetSpliterator", "TreeSetDescendingIterator", "TreeSetDescendingSpliterator", "TreeMapEntry", "TreeMapNode", "TreeMapIterator", "TreeMapSpliterator", "TreeMapKeyIterator", "TreeMapKeySpliterator", "TreeMapValueIterator", "TreeMapValueSpliterator", "TreeMapEntryIterator", "TreeMapEntrySpliterator", "PriorityQueueNode", "PriorityQueueIterator", "PriorityQueueSpliterator", "AbstractCollection", "AbstractQueueIterator", "AbstractQueueSpliterator", "AbstractQueueDescendingIterator", "AbstractQueueDescendingSpliterator", "AbstractDeque", "LinkedListDeque", "LinkedListDequeNode", "LinkedListDequeIterator", "LinkedListDequeSpliterator", "LinkedListDequeDescendingIterator", "LinkedListDequeDescendingSpliterator", "ArrayDeque", "ArrayDequeNode", "ArrayDequeIterator", "ArrayDequeSpliterator", "ArrayDequeDescendingIterator", "ArrayDequeDescendingSpliterator", "StackNode", "StackIterator", "StackSpliterator", "StackDescendingIterator", "StackDescendingSpliterator", "AbstractListIterator", "AbstractListSpliterator", "ArrayListListIterator", "ArrayListListSpliterator", "LinkedListListIterator", "LinkedListListSpliterator", "AbstractSetIterator", "AbstractSetSpliterator", "HashSetSetIterator", "HashSetSetSpliterator", "TreeSetSetIterator", "TreeSetSetSpliterator", "AbstractMapIterator", "AbstractMapSpliterator", "HashMapMapIterator", "HashMapMapSpliterator", "TreeMapMapIterator", "TreeMapMapSpliterator", "AbstractSequentialListIterator", "AbstractSequentialListSpliterator", "LinkedListSequentialListIterator", "LinkedListSequentialListSpliterator", "ArrayListSequentialListIterator", "ArrayListSequentialListSpliterator", "LinkedListNodeIterator", "LinkedListNodeSpliterator", "ArrayListNodeIterator", "ArrayListNodeSpliterator", "HashSetNodeIterator", "HashSetNodeSpliterator", "HashMapEntryIterator", "HashMapEntrySpliterator", "HashSetDescendingIterator", "HashSetDescendingSpliterator", "TreeSetNodeIterator", "TreeSetNodeSpliterator", "TreeMapEntryIterator", "TreeMapEntrySpliterator", "PriorityQueueNodeIterator", "PriorityQueueNodeSpliterator", "AbstractCollectionIterator", "AbstractCollectionSpliterator", "AbstractQueueIterator", "AbstractQueueSpliterator", "AbstractQueueDescendingIterator", "AbstractQueueDescendingSpliterator", "AbstractDequeIterator", "AbstractDequeSpliterator", "LinkedListDequeIterator", "LinkedListDequeSpliterator", "LinkedListDequeDescendingIterator", "LinkedListDequeDescendingSpliterator", "ArrayDequeIterator", "ArrayDequeSpliterator", "ArrayDequeDescendingIterator", "ArrayDequeDescendingSpliterator", "StackNodeIterator", "StackNodeSpliterator", "StackDescendingIterator", "StackDescendingSpliterator", "AbstractListIterator", "AbstractListSpliterator", "ArrayListListIterator", "ArrayListListSpliterator", "LinkedListListIterator", "LinkedListListSpliterator", "AbstractSetIterator", "AbstractSetSpliterator", "HashSetSetIterator", "HashSetSetSpliterator", "TreeSetSetIterator", "TreeSetSetSpliterator", "AbstractMapIterator", "AbstractMapSpliterator", "HashMapMapIterator", "HashMapMapSpliterator", "TreeMapMapIterator", "TreeMapMapSpliterator", "AbstractSequentialListIterator", "AbstractSequentialListSpliterator", "LinkedListSequentialListIterator", "LinkedListSequentialListSpliterator", "ArrayListSequentialListIterator", "ArrayListSequentialListSpliterator", "LinkedListNodeIterator", "LinkedListNodeSpliterator", "ArrayListNodeIterator", "ArrayListNodeSpliterator", "HashSetNodeIterator", "HashSetNodeSpliterator", "HashMapEntryIterator", "HashMapEntrySpliterator", "HashSetDescendingIterator", "HashSetDescendingSpliterator", "TreeSetNodeIterator", "TreeSetNodeSpliterator", "TreeMapEntryIterator", "TreeMapEntrySpliterator", "PriorityQueueNodeIterator"];
 autocomplete(editor, { startTag: ".", suggestionList: suggestionList });
+
+
+
+// Funzione per recuperare i dati dal localStorage
+function loadEditorContent() {
+    var savedEditorContent = localStorage.getItem("editorContent");
+    var savedUnderTestContent = localStorage.getItem("underTestContent");
+    
+    if (savedEditorContent !== null) {
+        editor.setValue(savedEditorContent); // Imposta il contenuto salvato nell'editor
+    }
+    if (savedUnderTestContent !== null) {
+        sidebarEditor.setValue(savedUnderTestContent); // Imposta il contenuto salvato nella CUT
+    }
+      
+}
+
+// Carica il contenuto salvato quando la pagina viene caricata
+window.addEventListener("load", function () {
+    loadEditorContent();
+});
+
+
+function saveEditorContent() {
+    var editorContent = editor.getValue();
+    var underTestContent = sidebarEditor.getValue();
+    
+    localStorage.setItem("editorContent", editorContent); //Salva il contenuto dell'editor
+    localStorage.setItem("underTestContent", underTestContent); // Salva il contenuto della CUT
+} 
+
+// Salva il contenuto automaticamente ogni volta che l'editor viene modificato
+editor.on("change", function () {
+    saveEditorContent();
+});
+
+sidebarEditor.on("change", function () {
+    saveEditorContent();
+});
+

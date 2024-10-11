@@ -444,65 +444,67 @@ public class HomeController {
 	 * @throws IOException
 	 */
 
-	 //MODIFICA (20/02/2024) : Eliminazione della riga riguardante il caricamento dei relativi test generati dai Robot (ATTENZIONE)
-	@PostMapping("/uploadFile")
-	@ResponseBody
-	public ResponseEntity<FileUploadResponse> uploadFile(@RequestParam("file") MultipartFile classFile,
-														 @RequestParam("model") String model, @CookieValue(name = "jwt", required = false) String jwt, HttpServletRequest request) throws IOException {
+	 @PostMapping("/uploadFile")
+	 @ResponseBody
+	 public ResponseEntity<FileUploadResponse> uploadFile(
+			 @RequestParam("file") MultipartFile classFile,
+			 @RequestParam("model") String model,
+			 @CookieValue(name = "jwt", required = false) String jwt,
+			 HttpServletRequest request) throws IOException {
+	 
+		 if (isJwtValid(jwt)) {
+			 System.out.println("Token valido (uploadFile)");
+	 
+			 // Legge i metadati della classe della parte "model" del body HTTP e li salva in un oggetto ClassUT
+			 ObjectMapper mapper = new ObjectMapper();
+			 ClassUT classe = mapper.readValue(model, ClassUT.class);
+	 
+			 // Salva il nome del file caricato
+			 String fileName = StringUtils.cleanPath(classFile.getOriginalFilename());
+			 long size = classFile.getSize();
+	 
+			 // **MODIFICA**: Imposta il nome della classe al nome del file (senza estensione)
+			 String classNameFromFile = fileName.substring(0, fileName.lastIndexOf('.'));  // Rimuove l'estensione .java o altro
+			 classe.setName(classNameFromFile);  // Forza il nome della classe a essere uguale al nome del file
+	 
+			 // Salva la classe nel filesystem condiviso
+			 FileUploadUtil.saveCLassFile(fileName, classe.getName(), classFile);
+	 
+			 // Genera e salva i test nel filesystem condiviso
+			 RobotUtil.generateAndSaveRobots(fileName, classe.getName(), classFile);
+	 
+			 // Prepara la risposta per il front-end
+			 FileUploadResponse response = new FileUploadResponse();
+			 response.setFileName(fileName);
+			 response.setSize(size);
+			 response.setDownloadUri("/downloadFile");
+	 
+			 // Setta data di caricamento e percorso di download
+			 LocalDate today = LocalDate.now();
+			 classe.setUri("Files-Upload/" + classe.getName() + "/" + fileName);
+			 classe.setDate(today.toString());
+	 
+			 // Creazione dell'oggetto riguardante l'operazione appena fatta
+			 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			 String data = today.format(formatter);
+			 Operation operation1 = new Operation((int) orepo.count(), userAdmin.getUsername(), classe.getName(), 0, data);
+	 
+			 // Salva i dati sull'operazione fatta nel database
+			 orepo.save(operation1);
+			 // Salva i dati sulla classe nel database
+			 repo.save(classe);
+	 
+			 System.out.println("Operazione completata con successo (uploadFile)");
+			 return new ResponseEntity<>(response, HttpStatus.OK);
+	 
+		 } else {
+			 System.out.println("Token non valido (uploadFile)");
+			 FileUploadResponse response = new FileUploadResponse();
+			 response.setErrorMessage("Errore, il token non è valido");
+			 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		 }
+	 }
 
-		//MODIFICA (11/02/2024) : Gestione flusso JWT
-		if (isJwtValid(jwt)) {
-
-			System.out.println("Token valido (uploadFile)");
-
-			//Legge i metadati della classe della parte "model" del body HTTP e li salva in un oggetto ClasseUT
-			ObjectMapper mapper = new ObjectMapper();
-			ClassUT classe = mapper.readValue(model, ClassUT.class);
-			
-			//Salva il nome del file caricato
-			String fileName = StringUtils.cleanPath(classFile.getOriginalFilename());
-			long size = classFile.getSize();
-			
-			//Salva la classe nel filesystem condiviso
-			FileUploadUtil.saveCLassFile(fileName, classe.getName(), classFile);
-			
-			//Genera e salva i test nel filesystem condiviso
-			RobotUtil.generateAndSaveRobots(fileName, classe.getName(), classFile);
-			
-			//Prepara la risposta per il front-end
-			FileUploadResponse response = new FileUploadResponse();
-			response.setFileName(fileName);
-			response.setSize(size);
-			response.setDownloadUri("/downloadFile");
-			
-			//Setta data di caricamento e percorso di download 
-			classe.setUri("Files-Upload/"+classe.getName()+"/"+fileName);
-			classe.setDate(today.toString());
-
-			//Creazione dell'oggetto riguardante l'operazione appena fatta
-			LocalDate currentDate = LocalDate.now();
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-			String data = currentDate.format(formatter);
-			Operation operation1= new Operation((int)orepo.count(),userAdmin.getUsername(),classe.getName(),0,data);
-
-			//Salva i dati sull'operazione fatta nel database
-			orepo.save(operation1);
-			//Salva i dati sulla classe nel database
-			repo.save(classe);
-			System.out.println("Operazione completata con successo (uploadFile)");
-			return new ResponseEntity<>(response,HttpStatus.OK);
-			
-		}else {
-
-			System.out.println("Token non valido (uploadFile)");
-			FileUploadResponse response = new FileUploadResponse();
-			response.setErrorMessage("Errore, il token non è valido");
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-
-		}
-		//FINE MODIFICA
-
-	}
 
 	/**
 	 * @param classFile     file della classe inviato come parte della richiesta POST

@@ -1,12 +1,41 @@
 /* BASICS */
 
+/*
 .CodeMirror {
-  /* Set height, width, borders, and global font properties here */
+  /* Set height, width, borders, and global font properties here 
   font-family: monospace;
   height: 300px;
   color: black;
   direction: ltr;
+}*/
+
+
+/* LIGHT THEME FONT EDITED*/
+.CodeMirror {
+  /* Set height, width, borders, and global font properties here */
+  font-family: monospace;
+  height: 300px;
+  direction: ltr;
+
+  span.cm-comment { color: #123f67; } /*colore base 5c98cd*/
+  span.cm-string, span.cm-string-2 { color: #ffe600; } /*colore base #E6DB74*/
+  span.cm-number { color: #00d4ff; } /*colore base ca94ff*/
+  span.cm-variable { color: #00d4ff; } /*colore base #f8f8f2*/
+  span.cm-variable-2 { color: #00d4ff; }
+  span.cm-def { color: #37ff00; } /*colore base 72C05D*/
+  span.cm-operator { color: #00d4ff; }
+  span.cm-keyword { color: #ff0404; } /*colore base #ff6541*/
+  span.cm-atom { color: #bd93f9; }
+  span.cm-meta { color: #f8f8f2; }
+  span.cm-tag { color: #bb2200; }
+  span.cm-attribute { color: #66D9EF; }
+  span.cm-qualifier { color: #72C05D; }
+  span.cm-property { color: #f8f8f2; }
+  span.cm-builtin { color: #72C05D; }
+  span.cm-variable-3, span.cm-type { color: #ff8400; }
 }
+
+
 
 /* PADDING */
 

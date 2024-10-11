@@ -422,16 +422,17 @@ public class Controller {
     public static String generateToken(User user) {
         Instant now = Instant.now();
         Instant expiration = now.plus(1, ChronoUnit.HOURS);
-
+    
         String token = Jwts.builder()
-                .setSubject(user.getEmail())
+                .setSubject(user.getEmail()) // Usa il getter di Lombok per l'email
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(expiration))
-                .claim("userId", user.getID())
-                .claim("role", "user")
-                .signWith(SignatureAlgorithm.HS256, "mySecretKey")
+                .claim("userId", user.getID()) // Usa il getter di Lombok per l'ID
+                .claim("nome", user.getName()) // Usa il getter di Lombok per il nome
+                .claim("cognome", user.getSurname()) // Usa il getter di Lombok per il cognome
+                .signWith(SignatureAlgorithm.HS256, "mySecretKey") // Chiave segreta per firmare il token
                 .compact();
-
+    
         return token;
     }
 
@@ -690,4 +691,3 @@ public class Controller {
 }
 
 }
-
