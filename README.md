@@ -24,3 +24,9 @@ Nel corso dello sviluppo, ci siamo focalizzati sull'implementazione dei seguenti
 Campagna di Test:
 
 Una parte cruciale del nostro lavoro è stata la campagna di test di concorrenza, finalizzata a verificare la stabilità del sistema in situazioni di utilizzo simultaneo da parte di più giocatori. Abbiamo eseguito test approfonditi per simulare l’accesso concorrente al filesystem condiviso (Volume T8), identificando e risolvendo potenziali criticità legate alla gestione delle risorse. Questo ha garantito che il sistema possa gestire efficacemente un numero elevato di utenti senza compromettere le prestazioni o la coerenza dei dati.
+
+
+
+https://github.com/user-attachments/assets/53769e56-85bc-47ce-9d20-666a667a281b
+
+
